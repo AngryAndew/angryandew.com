@@ -2,6 +2,8 @@ import React from 'react';
 import { render, within, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import fc from 'fast-check';
+import { ThemeProvider } from '@mui/material/styles';
+import { getTheme } from '../theme';
 import ProjectCard from './ProjectCard';
 
 /**
@@ -52,6 +54,94 @@ describe('ProjectCard', () => {
           expect(link.tagName).toBe('A');
           expect(link).toHaveAttribute('href', project.url);
           expect(link).toHaveAttribute('target', '_blank');
+
+          unmount();
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: dark-mode-styling, Property 2: Card elevation invariant
+   *
+   * For any project object with name, description, and URL, the rendered
+   * ProjectCard has a non-zero elevation (visible box-shadow not equal to "none").
+   *
+   * Validates: Requirements 6.1
+   */
+  it('Property 2: Card elevation invariant', () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          name: visibleText(),
+          description: visibleText(),
+          url: fc.webUrl(),
+        }),
+        (project) => {
+          cleanup();
+          const theme = getTheme('light');
+          const { container, unmount } = render(
+            <ThemeProvider theme={theme}>
+              <ProjectCard project={project} />
+            </ThemeProvider>
+          );
+
+          // The MUI Card with elevation={2} renders with a box-shadow from the theme
+          const card = container.querySelector('.MuiCard-root');
+          expect(card).not.toBeNull();
+          const style = window.getComputedStyle(card);
+          // box-shadow should not be "none" (elevation > 0 produces a shadow)
+          expect(style.boxShadow).not.toBe('none');
+
+          unmount();
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: dark-mode-styling, Property 3: Project name typographic distinction
+   *
+   * For any project object, the project name element has a bolder font weight
+   * than the description element.
+   *
+   * Validates: Requirements 6.4
+   */
+  it('Property 3: Project name typographic distinction', () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          name: visibleText(),
+          description: visibleText(),
+          url: fc.webUrl(),
+        }),
+        (project) => {
+          cleanup();
+          const theme = getTheme('light');
+          const { container, unmount } = render(
+            <ThemeProvider theme={theme}>
+              <ProjectCard project={project} />
+            </ThemeProvider>
+          );
+
+          const heading = container.querySelector('h3');
+          const description = container.querySelector('.MuiTypography-body2');
+          expect(heading).not.toBeNull();
+          expect(description).not.toBeNull();
+
+          const headingWeight = parseInt(
+            window.getComputedStyle(heading).fontWeight || '400',
+            10
+          );
+          const descWeight = parseInt(
+            window.getComputedStyle(description).fontWeight || '400',
+            10
+          );
+
+          // The name heading should be bolder than the description
+          expect(headingWeight).toBeGreaterThan(descWeight);
 
           unmount();
         }
