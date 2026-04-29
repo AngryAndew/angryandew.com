@@ -1,2 +1,3 @@
 # angryandew.com
-Home Page for angryandew.com
+
+Personal portfolio website at www.angryandew.com.
