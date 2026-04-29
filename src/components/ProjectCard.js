@@ -7,9 +7,18 @@ import Button from '@mui/material/Button';
 
 function ProjectCard({ project }) {
   return (
-    <Card>
+    <Card
+      elevation={2}
+      sx={{
+        transition: 'box-shadow 300ms ease, background-color 300ms ease',
+        '&:hover': {
+          boxShadow: 6,
+          backgroundColor: 'action.hover',
+        },
+      }}
+    >
       <CardContent>
-        <Typography variant="h6" component="h3">
+        <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
           {project.name}
         </Typography>
         <Typography variant="body2">
