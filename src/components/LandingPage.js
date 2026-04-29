@@ -4,14 +4,31 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ProjectCard from './ProjectCard';
+import ThemeToggle from './ThemeToggle';
 import defaultProjects from '../data/projectRegistry';
 
-function LandingPage({ projects = defaultProjects }) {
+function LandingPage({ projects = defaultProjects, mode, onToggleColorMode }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Box component="header" sx={{ py: 6, textAlign: 'center' }}>
+      <Box
+        component="header"
+        sx={{
+          py: 6,
+          textAlign: 'center',
+          bgcolor: 'background.paper',
+          transition: 'background-color 300ms ease, color 300ms ease',
+        }}
+      >
         <Container maxWidth="md">
-          <Typography variant="h2" component="h1" gutterBottom>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ThemeToggle mode={mode} onToggle={onToggleColorMode} />
+          </Box>
+          <Typography
+            variant="h2"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: 700, fontSize: '3rem' }}
+          >
             Andrew
           </Typography>
           <Typography variant="body1">
@@ -37,7 +54,16 @@ function LandingPage({ projects = defaultProjects }) {
         </Container>
       </Box>
 
-      <Box component="footer" sx={{ py: 3, textAlign: 'center' }}>
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          textAlign: 'center',
+          bgcolor: 'background.paper',
+          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+          transition: 'background-color 300ms ease, color 300ms ease',
+        }}
+      >
         <Container maxWidth="md">
           <Typography variant="body2" color="text.secondary">
             © {new Date().getFullYear()} Andrew
@@ -47,5 +73,6 @@ function LandingPage({ projects = defaultProjects }) {
     </Box>
   );
 }
+
 
 export default LandingPage;
