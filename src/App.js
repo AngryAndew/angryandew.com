@@ -1,8 +1,15 @@
+import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
+import LandingPage from './components/LandingPage';
+
 function App() {
   return (
-    <div>
-      <h1>angryandew.com</h1>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <LandingPage />
+    </ThemeProvider>
   );
 }
 
